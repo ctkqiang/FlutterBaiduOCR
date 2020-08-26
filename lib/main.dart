@@ -1,17 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_baidu_ocr/plugins/baidu_ocr_plugin.dart';
 import 'dart:convert' as convert;
 
 import 'package:flutter_baidu_ocr/utils/file_image_ex.dart';
+import 'package:flutter_ocr_plugin/flutter_ocr_plugin.dart';
 
 const String ak = "oWhYHquxoOWI1V4k0BgASNP5";
 const String sk = "AiEINj1Iww46TzyTjOeo9qW50z7kz9YY";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  String result = await BaiduOcrPlugin.init(ak, sk);
+  String result = await FlutterOcrPlugin.init(ak, sk);
   print('百度OCR 初始化=》$result');
   runApp(MyApp());
 }
@@ -72,21 +72,11 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
           children: <Widget>[
-            Text(
-              _result ?? "",
-            ),
-            _filePath != null && _filePath.isNotEmpty
-                ? Image(
-                    image: FileImageEx(File(_filePath ?? "")),
-                    height: 200.0,
-                  )
-                : new SizedBox(),
             new OutlineButton(
                 onPressed: () async {
-                  String result = await BaiduOcrPlugin.getIdCardInfo(true);
+                  String result = await FlutterOcrPlugin.getIdCardInfo(true);
                   print(result);
                   setState(() {
                     Map data = convert.jsonDecode(result);
@@ -97,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: new Text("身份证正面")),
             new OutlineButton(
                 onPressed: () async {
-                  String result = await BaiduOcrPlugin.getIdCardInfo(false);
+                  String result = await FlutterOcrPlugin.getIdCardInfo(false);
                   print(result);
                   setState(() {
                     Map data = convert.jsonDecode(result);
@@ -108,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: new Text("身份证反面")),
             new OutlineButton(
                 onPressed: () async {
-                  String result = await BaiduOcrPlugin.getBankCard();
+                  String result = await FlutterOcrPlugin.getBankCard();
                   print(result);
                   setState(() {
                     Map data = convert.jsonDecode(result);
@@ -119,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: new Text("银行卡")),
             new OutlineButton(
                 onPressed: () async {
-                  String result = await BaiduOcrPlugin.getVehicle();
+                  String result = await FlutterOcrPlugin.getVehicle();
                   print(result);
                   setState(() {
                     Map data = convert.jsonDecode(result);
@@ -130,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: new Text("行驶证")),
             new OutlineButton(
                 onPressed: () async {
-                  String result = await BaiduOcrPlugin.getDriving();
+                  String result = await FlutterOcrPlugin.getDriving();
                   print(result);
                   setState(() {
                     Map data = convert.jsonDecode(result);
@@ -139,6 +129,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                 },
                 child: new Text("驾驶证")),
+            Text(
+              _result ?? "",
+            ),
+            _filePath != null && _filePath.isNotEmpty
+                ? Image(
+                    image: FileImageEx(File(_filePath ?? "")),
+                    height: 200.0,
+                  )
+                : new SizedBox(),
           ],
         ),
       ),
